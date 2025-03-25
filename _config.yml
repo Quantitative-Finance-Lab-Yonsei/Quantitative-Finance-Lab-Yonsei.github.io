@@ -1,8 +1,10 @@
-title: Moonwalk
-author: Abhinav Saxena
-url: https://www.abhinavsaxena.com/moonwalk # root address of the site
+title: QFL
+author: YONSEI QUANTITATIVE FINANCE LAB
+url: https://www.facebook.com/groups/yonsei.finance/?ref=bookmarks # root address of the site
 description: > # description of the site (multiple lines allowed)
-  Moonwalk is a fast and elegant Jekyll theme with a clean dark mode. It comes with horizontal list (for navbar and footer), card list (for portfolio), and a generic vertical list. It is very easy to modify in case you want to build over it - please see _layouts/home.html to do that.
+  The Yonsei Quantitative Finance Lab (YQFL), led by Kwangwon Ahn, is a research and development hub focused on applying advanced quantitative techniques to financial markets. The lab specializes in areas like financial modeling, risk management, and algorithmic trading. By utilizing mathematical models, statistical methods, and computational tools, the lab aims to uncover patterns, forecast market trends, and develop strategies for financial decision-making.
+  Under the leadership of Professor Kwangwon Ahn, YQFL collaborates with both academia and industry to bridge theoretical knowledge with real-world financial applications. The lab’s work spans across various aspects of finance, including asset pricing, portfolio optimization, and financial data analysis, contributing to the understanding and advancement of financial technologies and practices.
+  YQFL emphasizes hands-on experience, often involving students in cutting-edge research projects that tackle current financial challenges. Through its interdisciplinary approach, the lab continues to be at the forefront of innovations in the intersection of finance, mathematics, and computer science.
 
 permalink: /:slug
 
