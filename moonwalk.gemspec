@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |spec|
-  spec.name          = "moonwalk"
+  spec.name          = "Quantitative Finance Lab"
   spec.version       = "0.1.3"
-  spec.authors       = ["Abhinav Saxena"]
-  spec.email         = ["abhinav061@gmail.com"]
+  spec.authors       = ["Ahn Kwang-Won"]
+  spec.email         = ["k.ahn@yonsei.ac.kr"]
 
-  spec.summary       = "A fast and minimalist Jekyll theme with clean dark mode."
-  spec.homepage      = "https://github.com/abhinavs/moonwalk"
-  spec.license       = "MIT"
+  spec.summary       = "QUANTITATIVE FINANCE LAB."
+  spec.homepage      = "https://github.com/Quantitative-Finance-Lab-Yonsei"
+  spec.license       = "YONSEI UNIVERSITY"
 
   spec.files         = `git ls-files -z`.split("\x0").select { |f| f.match(%r!^(assets|_layouts|_includes|_sass|LICENSE|README|_config\.yml)!i) }
 
