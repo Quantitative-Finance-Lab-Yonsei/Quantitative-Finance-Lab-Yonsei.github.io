@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S&P 500 Real-time Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    canvas {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>S&P 500 Real-Time Chart</h1>
+  <canvas id="sp500Chart" width="1000" height="400"></canvas>
+
+  <script>
+    const ctx = document.getElementById("sp500Chart").getContext("2d");
+    const chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [{
+          label: "S&P 500",
+          data: [],
+          borderColor: "#007bff",
+          fill: false,
+          tension: 0.3,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          tooltip: { mode: "index", intersect: false }
+        },
+        scales: {
+          x: {
+            ticks: {
+              maxTicksLimit: 20,
+              maxRotation: 0,
+              autoSkip: true,
+            },
+            title: {
+              display: true,
+              text: "Time"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Index Value"
+            }
+          }
+        }
+      }
+    });
+
+    // Google Apps Script URL
+    const url = "https://script.google.com/macros/s/AKfycbzfboboZc05eYvSJOkl_wJV_MlIMz_rwzu7A8SyjzrAeHyaCcsk9qwamw4aQ1omZ4u62w/exec";  // 바꿔야 함
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(row => row.date);
+        const values = data.map(row => parseFloat(row.value));
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = values;
+        chart.update();
+      })
+      .catch(error => {
+        console.error("Error loading data:", error);
+      });
+  </script>
+</body>
+</html>
