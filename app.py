@@ -3,38 +3,44 @@ import FinanceDataReader as fdr
 import datetime
 import pyupbit
 
-
 st.set_page_config(layout="wide")
-st.title("📈 S&P500 & 이동평균선 차트")
+st.title("📈 실시간 금융 대시보드: S&P500, Bitcoin, Magnificent 7")
 
-"""
-S&P500
-"""
-Snp_df = fdr.DataReader(360750, datetime.date(2010, 1, 1))
-Snp_df['MA20'] = Snp_df['Close'].rolling(window=20).mean()
-Snp_df['MA50'] = Snp_df['Close'].rolling(window=50).mean()
+start_date = datetime.date(2010, 1, 1)
 
+# 📊 S&P500
+st.subheader("📊 S&P500 (미국 지수)")
+snp_df = fdr.DataReader("^GSPC", start_date)
+snp_df['MA20'] = snp_df['Close'].rolling(window=20).mean()
+snp_df['MA50'] = snp_df['Close'].rolling(window=50).mean()
+st.line_chart(snp_df[['Close', 'MA20', 'MA50']])
 
-"""
-Bitcoin
-"""
-bitcoin_df = pyupbit.get_ohlcv("KRW-BTC")
-bitcoin_df['MA20'] = bitcoin_df['Close'].rolling(window=20).mean()
-bitcoin_df['MA50'] = bitcoin_df['Close'].rolling(window=50).mean()
+# 💰 Bitcoin
+st.subheader("💰 Bitcoin (KRW)")
+btc_df = pyupbit.get_ohlcv("KRW-BTC")
+btc_df['MA20'] = btc_df['close'].rolling(window=20).mean()
+btc_df['MA50'] = btc_df['close'].rolling(window=50).mean()
+btc_df.rename(columns={"close": "Close"}, inplace=True)
+st.line_chart(btc_df[['Close', 'MA20', 'MA50']])
 
+# 🌟 Magnificent 7
+st.subheader("🌟 Magnificent 7 (전 종목)")
+magnificent_7 = {
+    "AAPL": "Apple",
+    "MSFT": "Microsoft",
+    "AMZN": "Amazon",
+    "NVDA": "NVIDIA",
+    "GOOGL": "Google",
+    "META": "Meta",
+    "TSLA": "Tesla"
+}
 
-"""
-Magnificent 7 
-"""
-AAPL_df = fdr.DataReader("AAPL", datetime.date(2010, 1, 1))
-MSFT_df = fdr.DataReader("MSFT", datetime.date(2010, 1, 1))
-AMZN_df = fdr.DataReader("AMZN", datetime.date(2010, 1, 1))
-NVDA_df = fdr.DataReader("NVDA", datetime.date(2010, 1, 1))
-GOOGL_df = fdr.DataReader("GOOGL", datetime.date(2010, 1, 1))
-META_df = fdr.DataReader("META", datetime.date(2010, 1, 1))
-TSLA_df = fdr.DataReader("TSLA", datetime.date(2010, 1, 1))
-
-
-
-st.line_chart(Snp_df[['Close', 'MA20', 'MA50']])
-st.line_chart(bitcoin_df[['Close', 'MA20', 'MA50']])
+for ticker, name in magnificent_7.items():
+    st.markdown(f"#### {name} ({ticker})")
+    try:
+        df = fdr.DataReader(ticker, start_date)
+        df['MA20'] = df['Close'].rolling(window=20).mean()
+        df['MA50'] = df['Close'].rolling(window=50).mean()
+        st.line_chart(df[['Close', 'MA20', 'MA50']])
+    except Exception as e:
+        st.warning(f"{name} 데이터 로드 실패: {e}")
