@@ -1,71 +1,60 @@
-
 async function fetchCandleData() {
-    const response = await fetch("https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=37"); // 7일 이동 평균을 포함하기 위해 37일치 데이터 요청
-    const data = await response.json();
-    return data;
+    const response = await fetch("https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=37");
+    return await response.json();
 }
 
-function calculateMovingAverage(data, count) {
-    let movingAverages = [];
-    for (let i = 0; i <= data.length - count; i++) {
-        let sum = 0;
-        for (let j = 0; j < count; j++) {
-            sum += data[i + j].trade_price;
-        }
-        movingAverages.push({
-            x: new Date(data[i + count - 1].candle_date_time_kst),
-            y: sum / count
+function lppl(t, A, B, C, tc, m, omega, phi) {
+    return A + B * Math.pow(tc - t, m) + C * Math.pow(tc - t, m) * Math.cos(omega * Math.log(tc - t) - phi);
+}
+
+function calculateLpplPoints(data, params) {
+    const lpplPoints = [];
+    for (let i = 0; i < 30; i++) {
+        const t = i;
+        const y = lppl(t, ...params);
+        lpplPoints.push({
+            x: new Date(data[i].candle_date_time_kst),
+            y: y
         });
     }
-    return movingAverages;
+    return lpplPoints;
 }
 
-function drawChart(data) {
-    var dataPoints = data.slice(0, 30).map(d => ({
+function drawChart(data, params) {
+    const actual = data.slice(0, 30).map(d => ({
         x: new Date(d.candle_date_time_kst),
-        y: [d.opening_price, d.high_price, d.low_price, d.trade_price]
+        y: d.trade_price
     }));
 
-    var movingAveragePoints = calculateMovingAverage(data, 7);
+    const predicted = calculateLpplPoints(data, params);
 
-    var chart = new CanvasJS.Chart("chartContainer", {
+    const chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
-        theme: "light2",
-        title: {
-            text: "비트코인 30일 캔들 그래프 및 7일 평균선"
-        },
-        axisX: {
-            valueFormatString: "DD MMM"
-        },
-        axisY: {
-            title: "가격 (KRW)",
-            prefix: "₩"
-        },
+        title: { text: "비트코인 30일 종가 + LPPL 예측선" },
+        axisY: { prefix: "₩" },
         data: [
-            {        
-                type: "candlestick",        
-                name: "일일 가격",
-                showInLegend: true,
-                yValueFormatString: "₩###,###",
-                dataPoints: dataPoints
+            {
+                type: "line",
+                name: "실제 종가",
+                dataPoints: actual,
+                showInLegend: true
             },
             {
                 type: "line",
-                name: "7일 평균",
-                showInLegend: true,
-                markerType: "none",
-                yValueFormatString: "₩###,###",
-                dataPoints: movingAveragePoints
+                name: "LPPL 예측선",
+                lineDashType: "dash",
+                dataPoints: predicted,
+                showInLegend: true
             }
         ]
     });
-
     chart.render();
 }
 
 async function init() {
     const candleData = await fetchCandleData();
-    drawChart(candleData);
+    const params = [41230000.0, -5320000.0, 1310000.0, 35, 0.36, 8.3, 1.5]; // Python 출력 예시
+    drawChart(candleData, params);
 }
 
 init();
