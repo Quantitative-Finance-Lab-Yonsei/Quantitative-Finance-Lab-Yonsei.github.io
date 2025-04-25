@@ -1,0 +1,8 @@
+https://docs.upbit.com/reference/%EC%9D%BCday-%EC%BA%94%EB%93%A4-1
+
+이 API 링크를 참고해서 웹앱을 만들어줘
+html, css, js 파일을 하나씩 다운로드할 수 있도록 해줘
+비트코인 추이를 30일 캔들 그래프로 표현해줘
+그래프는 canvas.js로 그려줘
+답변은 한글로 해줘
+바로 사용할 수 있는 완전한 코드로 만들어줘
